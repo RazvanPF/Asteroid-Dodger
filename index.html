@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asteroid Dodger Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!--------------------------------------------MAIN MENU---------------------------------------------------------->
+    <div id="main-menu">
+        <h1 class="title">
+            <span class="space">SPACE</span>
+            <img src="https://raw.githubusercontent.com/razvanpf/Images/main/divider.png" alt="Divider" class="divider">
+            <span class="dodger">DODGER</span>
+        </h1>
+        <div class="menu-buttons">
+            <button id="start-game-btn" class="menu-button">START GAME</button>
+            <button id="options-btn" class="menu-button">OPTIONS</button>
+            <button id="leaderboards-btn" class="menu-button">LEADERBOARDS</button>
+        </div>
+    </div>
+    <div id="game-container" class="hidden">
+        <canvas id="gameCanvas"></canvas>
+        
+    <!--------------------------------------------LIVES CONTAINER---------------------------------------------------------->
+        <div id="lives" style="position: absolute; top: 10px; left: 10px; display: flex;"></div>
+
+        <div id="score-board">
+            <p>Score: <span id="score">0</span></p>
+            <p>Time: <span id="game-time">00:00</span></p>
+        </div>
+        <div id="game-over" class="hidden">
+            <h1>Game Over</h1>
+            <p>Your Score: <span id="final-score"></span></p>
+            <button id="restart-btn">Restart</button>
+            <button id="back-to-menu-btn">Main Menu</button>
+        </div>
+    </div>
+    <!--------------------------------------------POWER UP CONTAINER--------------------------------------------------------->
+    <div id="power-up-container">
+        <img id="pu-border" src="https://raw.githubusercontent.com/razvanpf/Images/main/PUborder.png" alt="Power-Up Border">
+        <div id="shield-info" class="pu-info hidden">
+            <img id="shield-icon" src="https://raw.githubusercontent.com/razvanpf/Images/main/shield.png" alt="Shield Icon">
+            <span id="shield-count">x3</span>
+        </div>
+        <div id="speed-info" class="pu-info hidden">
+            <img id="speed-icon" src="https://raw.githubusercontent.com/razvanpf/Images/main/powerup.png" alt="Speed Icon">
+            <span id="speed-count">2s</span>
+        </div>
+        <div id="bullet-info" class="pu-info hidden">
+            <img id="bullet-icon" src="https://raw.githubusercontent.com/razvanpf/Images/main/bullet.png" alt="Bullet Icon">
+            <span id="bullet-count">x3</span>
+        </div>
+    </div>
+    <!--------------------------------------------GAME OVER----------------------------------------------------------->
+    <div id="game-over" class="hidden">
+        <h1>Game Over</h1>
+        <p>Your Score: <span id="final-score">0</span></p>
+        <button id="restart-btn">Restart</button>
+        <button id="back-to-menu-btn">Main Menu</button>
+    </div>
+    <!--------------------------------------------OPTIONS POPUP ----------------------------------------------------------->
+    <div id="options-popup" class="hidden">
+        <h2>Options</h2>
+        <div class="options-content">
+            <!-- Sound Section -->
+            <div class="option-row">
+                <label for="sound-toggle" title="Not yet implemented">Sounds:</label>
+                <button id="sound-toggle" class="toggle-btn" disabled>ON</button>
+            </div>
+    
+            <!-- Background Music Section -->
+            <div class="option-row">
+                <label for="bg-music-slider" title="Not yet implemented">Background Music:</label>
+                <input type="range" id="bg-music-slider" min="0" max="100" value="70" disabled />
+            </div>
+    
+            <!-- FX Music Section -->
+            <div class="option-row">
+                <label for="fx-music-slider" title="Not yet implemented">FX Music:</label>
+                <input type="range" id="fx-music-slider" min="0" max="100" value="30" disabled />
+            </div>
+    
+            <!-- Controls Section -->
+            <div class="option-row">
+                <div class="controls-label">Controls:</div>
+                <div class="controls-row">
+                    <div class="control-text">
+                        <p>MOVEMENT:</p>
+                        <img src="https://raw.githubusercontent.com/razvanpf/Images/main/mousemovement.png" alt="Movement Icon" class="icon-img" />
+                    </div>
+                    <div class="control-text">
+                        <p>ACTION:</p>
+                        <img src="https://raw.githubusercontent.com/razvanpf/Images/main/leftmousebutton.png" alt="Action Icon" class="icon-img" />
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Clear Leaderboard Section -->
+            <div class="option-row">
+                <label for="clear-leaderboard-btn" title="Not yet implemented">Clear Leaderboards:</label>
+                <button id="clear-leaderboard-btn" class="toggle-btn" disabled>CLEAR</button>
+            </div>
+    
+            <!-- Close Button -->
+            <div class="option-row center-row">
+                <button id="close-popup-btn" class="main-menu-btn">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------- SCRIPTS----------------------------------------------------------->
+    <script src="game.js"></script>
+</body>
+</html>
