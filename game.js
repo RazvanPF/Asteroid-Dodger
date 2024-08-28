@@ -39,6 +39,44 @@ let totalPausedTime = 0; // Total Paused Time for pause game function
 let pauseStartTime = 0; // Pause start time for pause game function
 let lastTime = 0; // define and set last time variable
 let lastAsteroidFieldTime = 0; // Define and initialize the variable for asteroid field time
+let backgroundMusic, laserShotSound, explosionSound, powerUpSound; // Save sounds in vars
+let soundEnabled = true; // General sound variable for options menu
+let backgroundMusicVolume = 0.5; // background sound var
+let fxVolume = 0.5; // fx sound var
+
+// Load Audio files
+function loadAudio(src) {
+    return new Promise((resolve, reject) => {
+        const audio = new Audio(src);
+        audio.onloadeddata = () => resolve(audio);
+        audio.onerror = () => reject(new Error(`Failed to load audio: ${src}`));
+    });
+}
+
+// Load sounds with promises
+Promise.all([
+    loadAudio('https://raw.githubusercontent.com/razvanpf/Images/main/backgroundmusic.wav').then(audio => {
+        backgroundMusic = audio;
+        backgroundMusic.volume = 0.5; // Set initial volume for background music
+    }),
+    loadAudio('https://raw.githubusercontent.com/razvanpf/Images/main/lasershot.wav').then(audio => {
+        laserShotSound = audio;
+        laserShotSound.volume = 0.2; // Set initial volume for laser shots
+    }),
+    loadAudio('https://raw.githubusercontent.com/razvanpf/Images/main/smallblast.wav').then(audio => {
+        explosionSound = audio;
+        explosionSound.volume = 1; // Set initial volume for explosions
+    }),
+    loadAudio('https://raw.githubusercontent.com/razvanpf/Images/main/powerup.wav').then(audio => {
+        powerUpSound = audio;
+        powerUpSound.volume = 0.5; // Set initial volume for power-up sounds
+    }),
+]).then(() => {
+    console.log("All sounds loaded. Game ready.");
+    document.getElementById('start-game-btn').disabled = false; // Enable start game button if all assets are loaded
+}).catch(err => {
+    console.error('Error loading audio files:', err);
+});
 
 // Load images with promises
 function loadImage(src) {
@@ -55,6 +93,7 @@ function loadImage(src) {
         };
     });
 }
+
 
 // Initialize images
 let spaceshipImg, asteroidImg, powerUpImg, bulletImg, bgImg;
@@ -186,7 +225,7 @@ class PowerUp {
         } else if (type === 'life') {
             return lifeImg;
         } else if (type === 'magnetize') { 
-            return powerUpImg; // REPLACE LATER WITH ACTUAL MAGNET IMAGE INSTEAD OF BOLT (was different power up before)
+            return magnetImg;
         } else if (type === 'bullet') {
             return bulletImg;
         }
@@ -276,6 +315,12 @@ function init() {
     resetPowerUpUI();
     gameRunning = true;
     document.body.style.cursor = 'none'; // Hide cursor on start
+
+    // Ensure background music plays and loops
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.5; // Set initial volume, can be adjusted in options
+    backgroundMusic.play();
+
     console.log("Game initialized.");
 
     // Start the game loop
@@ -466,6 +511,7 @@ function loop(time = 0) {
                 spaceship.y < powerUp.y + powerUp.size &&
                 spaceship.y + spaceship.height > powerUp.y
             ) {
+                playSound(powerUpSound); // Play power-up sound
                 if (powerUp.type === 'shield') {
                     if (shieldCount < 3) {
                         shieldCount++;
@@ -584,8 +630,10 @@ function loop(time = 0) {
 // Create explosion effect
 function explode(x, y, type, isPlayerAction = false) {
     if (type === 'ship') {
+        playSound(explosionSound);
         ctx.drawImage(shipExplosionImg, x - 50, y - 50, 100, 100);
     } else if (type === 'asteroids') {
+        playSound(explosionSound);
         ctx.drawImage(asteroidExplosionImg, x - 50, y - 50, 100, 100);
     }
 
@@ -665,12 +713,16 @@ function createFloatingText(text, x, y) {
 
 // End the game
 function endGame() {
+    backgroundMusic.pause(); // Stop the background music
+    backgroundMusic.currentTime = 0; // Reset to the beginning
     if (lives > 1) {
         lives--;
         updateLivesUI();
         respawnShip();
     } else {
         console.log("Game over. Final score:", score);
+        addScoreToLeaderboard(score); // Add score to leaderboard on game over
+        bulletPowerLevel = 0;
         gameOver = true;
         gameRunning = false;
         gamePaused = false; // gamePaused is false in case the player paused before dying
@@ -792,7 +844,7 @@ function handleMouseMove(e) {
 
 // Event listener for firing bullets
 document.addEventListener('mousedown', (e) => {
-    if (bulletPowerLevel > 0) {
+    if (gameRunning && bulletPowerLevel > 0) {
         fireBullets();
         bulletFireRateTimer = setInterval(fireBullets, bulletFireRate);
     }
@@ -804,16 +856,19 @@ document.addEventListener('mouseup', (e) => {
 
 // Fire bullets based on the current power level
 function fireBullets() {
-    if (bulletPowerLevel >= 1) {
-        bullets.push(new Bullet(spaceship.x + spaceship.width / 2 - 2.5, spaceship.y));
-    }
-    if (bulletPowerLevel >= 2) {
-        bullets.push(new Bullet(spaceship.x + spaceship.width / 2 - 20, spaceship.y));
-        bullets.push(new Bullet(spaceship.x + spaceship.width / 2 + 15, spaceship.y));
-    }
-    if (bulletPowerLevel >= 3) {
-        bullets.push(new Bullet(spaceship.x + spaceship.width / 2 - 35, spaceship.y));
-        bullets.push(new Bullet(spaceship.x + spaceship.width / 2 + 30, spaceship.y));
+    if (gameRunning && bulletPowerLevel > 0) {
+        if (bulletPowerLevel >= 1) {
+            bullets.push(new Bullet(spaceship.x + spaceship.width / 2 - 2.5, spaceship.y));
+            playSound(laserShotSound);
+        }
+        if (bulletPowerLevel >= 2) {
+            bullets.push(new Bullet(spaceship.x + spaceship.width / 2 - 20, spaceship.y));
+            bullets.push(new Bullet(spaceship.x + spaceship.width / 2 + 15, spaceship.y));
+        }
+        if (bulletPowerLevel >= 3) {
+            bullets.push(new Bullet(spaceship.x + spaceship.width / 2 - 35, spaceship.y));
+            bullets.push(new Bullet(spaceship.x + spaceship.width / 2 + 30, spaceship.y));
+        }
     }
 }
 
@@ -897,7 +952,8 @@ Promise.all([
     loadImage('https://raw.githubusercontent.com/razvanpf/Images/main/shipexplosion.png').then(img => shipExplosionImg = img),
     loadImage('https://raw.githubusercontent.com/razvanpf/Images/main/asteroidexplosion.png').then(img => asteroidExplosionImg = img),
     loadImage('https://raw.githubusercontent.com/razvanpf/Images/main/shield.png').then(img => shieldImg = img),
-    loadImage('https://raw.githubusercontent.com/razvanpf/Images/main/heart.png').then(img => lifeImg = img)
+    loadImage('https://raw.githubusercontent.com/razvanpf/Images/main/heart.png').then(img => lifeImg = img),
+    loadImage('https://raw.githubusercontent.com/razvanpf/Images/main/magnetpng.png').then(img => magnetImg = img)
 ]).then(() => {
     // Ensure the game only starts after all images are loaded
     console.log("All images loaded. Game ready.");
@@ -1094,6 +1150,7 @@ function pauseGame() {
 
 function resumeGame() {
     if (gamePaused) {
+        backgroundMusic.play(); // Resume background music
         gamePaused = false;
         gameRunning = true;
 
@@ -1147,20 +1204,193 @@ document.getElementById('close-popup-btn').addEventListener('click', function ()
     document.getElementById('options-popup').classList.add('hidden');
 });
 
-// LEADERBOARDS - TO BE IMPLEMENTED AFTER LOCAL STORAGE //
+// Event listener for the leaderboard button
 document.getElementById('leaderboards-btn').addEventListener('click', function() {
-    alert('Leaderboards not yet implemented');
+    showLeaderboard();
 });
 
-///////////////////TESTING////////////////////
+// SOUNDS //
 
-// Spawn a few life power-ups at the start of the game to test respawn
-function spawnTestLifePowerUps() {
-    for (let i = 0; i < 3; i++) { // Spawn 3 life power-ups
-        const x = Math.random() * (canvas.width - 30) + 15; // Random x position
-        const y = -50 * (i + 1); // Staggered y position
-        powerUps.push(new PowerUp(x, y, 'life'));
+// Toggle sound ON/OFF
+document.getElementById('sound-toggle').addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    
+    // Update button text
+    const soundToggleButton = document.getElementById('sound-toggle');
+    soundToggleButton.textContent = soundEnabled ? 'ON' : 'OFF';
+    
+    // Mute/Unmute background music and FX sounds
+    backgroundMusic.muted = !soundEnabled;
+    laserShotSound.muted = !soundEnabled;
+    explosionSound.muted = !soundEnabled;
+    powerUpSound.muted = !soundEnabled;
+
+    // Stop or resume background music based on the toggle
+    if (!soundEnabled) {
+        backgroundMusic.pause();
+    } else {
+        backgroundMusic.play();
+    }
+});
+
+// Adjust background music volume
+document.getElementById('bg-music-slider').addEventListener('input', (e) => {
+    backgroundMusicVolume = e.target.value / 100;
+    backgroundMusic.volume = backgroundMusicVolume;
+});
+
+// Adjust FX sound volume
+document.getElementById('fx-music-slider').addEventListener('input', (e) => {
+    fxVolume = e.target.value / 100;
+    laserShotSound.volume = fxVolume;
+    explosionSound.volume = fxVolume;
+    powerUpSound.volume = fxVolume;
+});
+
+// Play or mute sounds based on options
+function playSound(sound) {
+    if (soundEnabled) {  // Only play sound if sound is enabled
+        sound.pause();   // Pause the sound if it's already playing
+        sound.currentTime = 0; // Reset the sound to the start
+        sound.play();    // Play the sound again
     }
 }
 
-///////////////////TESTING END////////////////////
+// LEADERBOARDS //
+
+// Retrieve leaderboard data from local storage
+function getLeaderboard() {
+    const leaderboard = localStorage.getItem('leaderboard');
+    return leaderboard ? JSON.parse(leaderboard) : [];
+}
+
+// Save leaderboard data to local storage
+function saveLeaderboard(leaderboard) {
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+}
+
+// Add a new score to the leaderboard
+function addScoreToLeaderboard(score) {
+    const leaderboard = getLeaderboard();
+
+    // Create a new entry with date/time and score
+    const now = new Date();
+    const newEntry = {
+        date: now.toLocaleDateString('en-GB'),
+        time: formatTime(gameTime),
+        score: score
+    };
+
+    // Add the new entry to the top of the leaderboard
+    leaderboard.unshift(newEntry);
+
+    // Keep only the last 10 entries
+    if (leaderboard.length > 10) {
+        leaderboard.pop();
+    }
+
+    // Save the updated leaderboard to local storage
+    saveLeaderboard(leaderboard);
+}
+
+// Populate the leaderboard popup with entries
+function populateLeaderboard() {
+    const leaderboard = getLeaderboard();
+    const leaderboardEntries = document.getElementById('leaderboard-entries');
+    leaderboardEntries.innerHTML = '';
+
+    if (leaderboard.length === 0) {
+        leaderboardEntries.innerHTML = '<p>No entries yet.</p>';
+    } else {
+        leaderboard.forEach(entry => {
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'leaderboard-entry';
+            entryDiv.innerHTML = `
+                <span>${entry.date}</span>
+                <span>${entry.time}</span>
+                <span>${entry.score}</span>
+            `;
+            leaderboardEntries.appendChild(entryDiv);
+        });
+    }
+}
+
+// Show the leaderboard popup
+function showLeaderboard() {
+    populateLeaderboard();
+    document.getElementById('leaderboard-popup').classList.remove('hidden');
+}
+
+// Hide the leaderboard popup
+function hideLeaderboard() {
+    document.getElementById('leaderboard-popup').classList.add('hidden');
+}
+
+// Event listener for the close button in the leaderboard popup
+document.getElementById('close-leaderboard-btn').addEventListener('click', function() {
+    hideLeaderboard();
+});
+
+// Show the clear leaderboard confirmation popup
+document.getElementById('clear-leaderboard-btn').addEventListener('click', function () {
+    document.getElementById('clear-leaderboard-popup').classList.remove('hidden');
+});
+
+// Confirm clearing the leaderboard
+document.getElementById('confirm-clear-btn').addEventListener('click', function () {
+    // Clear leaderboard data from localStorage
+    localStorage.removeItem('leaderboard');
+
+    // Clear the leaderboard entries from the UI
+    document.getElementById('leaderboard-entries').innerHTML = '';
+
+    // Hide the confirmation popup
+    document.getElementById('clear-leaderboard-popup').classList.add('hidden');
+
+    // Show the notification
+    showNotification('Leaderboards Cleared');
+});
+
+// Cancel clearing the leaderboard
+document.getElementById('cancel-clear-btn').addEventListener('click', function () {
+    // Just hide the confirmation popup
+    document.getElementById('clear-leaderboard-popup').classList.add('hidden');
+});
+
+// Notification with custom style and animation
+function showNotification(message, color = "rgba(42, 42, 42, 0.9)") {
+    const notification = document.createElement('div');
+    notification.textContent = message.toUpperCase(); 
+    notification.style.position = 'fixed';
+    notification.style.top = '50%';
+    notification.style.left = '50%';
+    notification.style.transform = 'translate(-50%, -50%)';
+    notification.style.backgroundColor = color;
+    notification.style.color = 'white';
+    notification.style.paddingLeft = '50px';
+    notification.style.paddingRight = '50px';
+    notification.style.paddingTop = '10px';
+    notification.style.paddingBottom = '10px';
+    notification.style.border = '1px solid blue'; 
+    notification.style.borderRadius = '5px'; 
+    notification.style.zIndex = '1000';
+    notification.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.8)';
+    notification.style.opacity = '0'; // Start with opacity 0 for animation
+    notification.style.transition = 'opacity 0.5s ease, transform 0.5s ease'; // Smooth slide-in/out animation
+    document.body.appendChild(notification);
+    
+    // Trigger the animation (slide in)
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translate(-50%, -45%)'; // Slightly move up when appearing
+    }, 10); // Small delay to ensure the transition applies
+
+    // Slide out and remove the notification after 2 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translate(-50%, -55%)'; // Move down when disappearing
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500); // Wait for the animation to finish before removing
+    }, 2000); // Duration before starting to hide
+}

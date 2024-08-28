@@ -238,7 +238,8 @@ button:hover {
     border-radius: 5px;
     padding: 20px;
     width: 885px;
-    height: 750px;
+    max-height: 750px;
+    height: 600px;
     z-index: 1000;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
     display: flex;
@@ -343,17 +344,15 @@ input[type="range"]:disabled {
     border: none;
     border-radius: 5px;
     color: white;
-    cursor: not-allowed; 
-    opacity: 0.6; 
 }
 
 /* Button Styling */
 .main-menu-btn {
-    width: 200px;
+    width: 100px;
     padding: 15px;
     background-color: transparent;
     color: white;
-    font-size: 18px;
+    font-size: 14px;
     border: 1px solid blue;
     border-radius: 5px;
     cursor: pointer;
@@ -364,10 +363,7 @@ input[type="range"]:disabled {
     background-color: lightblue;
 }
 
-.main-menu-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+
 .hidden {
     display: none !important;
 }
@@ -377,7 +373,8 @@ input[type="range"]:disabled {
     background-color: transparent;
     border: 1px solid blue;
     border-radius: 5px;
-    opacity: 0.5;
+    opacity: 1;
+    font-size: 14px;
 }
 
 #clear-leaderboard-btn {
@@ -386,34 +383,121 @@ input[type="range"]:disabled {
     border: 1px solid blue;
     border-radius: 5px;
     color: white;
+    font-size: 14px;
 }
-
-/*tooltip*/
-.disabled-option {
-    position: relative;
-    cursor: not-allowed; 
-    color: grey; 
-}
-
-.disabled-option::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: black;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 12px;
-    opacity: 0;
-    pointer-events: none;
-    white-space: nowrap;
-    transition: opacity 0.3s ease;
-}
-
-.disabled-option:hover::after {
-    opacity: 1;
-}
-
 /* ---OPTIONS MENU POPUP END--- */
+
+/* LEADERBOARDS POPUP START */
+#leaderboard-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 2px solid blue;
+    border-radius: 5px;
+    color: white;
+    padding: 20px;
+    z-index: 1001;
+}
+
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid white;
+    font-weight: bold;
+}
+
+.leaderboard-header span {
+    width: 33%; 
+    text-align: center; 
+}
+
+.leaderboard-content {
+    max-height: 450px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+#leaderboard-entries {
+    margin-top: 10px;
+}
+
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.leaderboard-entry span {
+    width: 33%; 
+    text-align: center; 
+}
+
+.leaderboard-entry span:nth-child(2) {
+    width: 34%; 
+    text-align: center; 
+}
+
+.leaderboard-entry:last-child {
+    border-bottom: none;
+}
+
+.center-row {
+    text-align: center;
+}
+
+.center-row button {
+    width: 100px; 
+    margin: 0 auto; 
+    display: block;
+}
+/* LEADERBOARDS POPUP ENDS */
+
+/* CLEAR LEADERBOARD POPUP START */
+
+#clear-leaderboard-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 2px solid blue;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    z-index: 1002; 
+}
+
+.center-row {
+    display: flex;
+    justify-content: center; 
+    gap: 20px; 
+}
+
+.center-row button {
+    width: 100px; 
+    margin: 10px 5px; 
+}
+
+#notification-popup {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    width: 300px;
+    height: 100px;
+    background-color: red;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    z-index: 99999;
+    display: block; 
+}
+/* CLEAR LEADERBOARD POPUP ENDS */

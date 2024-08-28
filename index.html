@@ -66,20 +66,20 @@
         <div class="options-content">
             <!-- Sound Section -->
             <div class="option-row">
-                <label for="sound-toggle" title="Not yet implemented">Sounds:</label>
-                <button id="sound-toggle" class="toggle-btn" disabled>ON</button>
+                <label for="sound-toggle">Sounds:</label>
+                <button id="sound-toggle" class="toggle-btn">ON</button>
             </div>
     
             <!-- Background Music Section -->
             <div class="option-row">
-                <label for="bg-music-slider" title="Not yet implemented">Background Music:</label>
-                <input type="range" id="bg-music-slider" min="0" max="100" value="70" disabled />
+                <label for="bg-music-slider">Background Music:</label>
+                <input type="range" id="bg-music-slider" min="0" max="100" value="50"/>
             </div>
     
             <!-- FX Music Section -->
             <div class="option-row">
-                <label for="fx-music-slider" title="Not yet implemented">FX Music:</label>
-                <input type="range" id="fx-music-slider" min="0" max="100" value="30" disabled />
+                <label for="fx-music-slider">FX Music:</label>
+                <input type="range" id="fx-music-slider" min="0" max="100" value="100" />
             </div>
     
             <!-- Controls Section -->
@@ -99,8 +99,8 @@
     
             <!-- Clear Leaderboard Section -->
             <div class="option-row">
-                <label for="clear-leaderboard-btn" title="Not yet implemented">Clear Leaderboards:</label>
-                <button id="clear-leaderboard-btn" class="toggle-btn" disabled>CLEAR</button>
+                <label for="clear-leaderboard-btn">Clear Leaderboards:</label>
+                <button id="clear-leaderboard-btn" class="toggle-btn">CLEAR</button>
             </div>
     
             <!-- Close Button -->
@@ -109,7 +109,37 @@
             </div>
         </div>
     </div>
-    <!-------------------------------------------- SCRIPTS----------------------------------------------------------->
+
+    <!--------------------------------------------LEADERBOARD POPUP ----------------------------------------------------------->
+    <div id="leaderboard-popup" class="hidden">
+        <h2>Leaderboard</h2>
+        <div class="leaderboard-content">
+            <div class="leaderboard-header">
+                <span>Date</span>
+                <span>Time</span>
+                <span>Score</span>
+            </div>
+            <div id="leaderboard-entries">
+                <!-- Entries will be populated here by JS-->
+            </div>
+        </div>
+        <div class="center-row">
+            <button id="close-leaderboard-btn" class="main-menu-btn">Close</button>
+        </div>
+    </div>
+<!--------------------------------------------CLEARLEADERBOARD CONFIRMATION POPUP --------------------------------------------->
+    <div id="clear-leaderboard-popup" class="hidden">
+        <h2>Clear Leaderboard</h2>
+        <p>Are you sure you want to clear all leaderboard saved data?</p>
+        <div class="center-row">
+            <button id="confirm-clear-btn" class="main-menu-btn">Confirm</button>
+            <button id="cancel-clear-btn" class="main-menu-btn">Cancel</button>
+        </div>
+    </div>
+<!------------------------------------------------------NOTIFICATION POPUP ---------------------------------------------------->
+    <div id="notification-popup" class="hidden">Leaderboards Cleared</div>
+
+    <!--------------------------------------------------- SCRIPTS-------------------------------------------------------------->
     <script src="game.js"></script>
 </body>
 </html>
