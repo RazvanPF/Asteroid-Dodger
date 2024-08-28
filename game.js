@@ -96,7 +96,7 @@ function loadImage(src) {
 
 
 // Initialize images
-let spaceshipImg, asteroidImg, powerUpImg, bulletImg, bgImg;
+let spaceshipImg, asteroidImg, magnetImg, bulletImg, bgImg;
 
 function formatTime(ms) {
     let totalSeconds = Math.floor(ms / 1000);
