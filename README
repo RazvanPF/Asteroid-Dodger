@@ -1,0 +1,54 @@
+# Asteroid Dodger
+
+Asteroid Dodger is an action-packed browser-based game where players navigate a spaceship through a field of asteroids, avoiding collisions and collecting power-ups. The game features progressively challenging levels, various power-ups, and a leaderboard to track your high scores.
+
+## Gameplay
+
+In Asteroid Dodger, you control a spaceship using your mouse, moving it around the screen to dodge incoming asteroids. The goal is to survive as long as possible while collecting power-ups that enhance your abilities or provide additional points. The game becomes more difficult over time, with increased asteroid speed and spawn rates.
+
+### Features
+
+- **Power-Ups**: Enhance your spaceship with various power-ups, including:
+  - **Shield**: Gain temporary invulnerability against asteroid collisions.
+  - **Pulse Wave**: Clear all asteroids on the screen with a powerful energy wave (note: this also removes all incoming on-screen power-ups, so choose wisely when to activate it!)
+  - **Magnetize**: Attract nearby power-ups for a limited time and increase power up spawn chance.
+  - **Extra Life**: Gain additional lives to extend your playtime.
+  - **Bullet Upgrade**: Increase your firepower with more bullets and faster shooting rates.
+
+- **Difficulty Levels**: The game ramps up in difficulty as time progresses, introducing faster asteroids, different asteroid directions and more challenging obstacles.
+
+- **Leaderboard**: Track your performance with the built-in leaderboard, which saves your top 10 high scores locally.
+
+- **Sound and Music**: Sound effects and background music that enhance the gameplay experience. You can adjust or mute the sound through the options menu.
+
+### Controls
+
+- **Movement**: Move your spaceship by moving your mouse. The ship follows the cursor around the screen.
+- **Shooting**: Click or hold the left mouse button to fire bullets at incoming asteroids (if bullets power up was picked up!).
+
+### Options Menu
+
+The options menu allows you to customize sounds volumes and clear the leaderboard:
+
+- **Sound**: Toggle all sounds on or off.
+- **Background Music**: Adjust the volume of the background music.
+- **FX Sounds**: Adjust the volume of sound effects.
+- **Controls**: Review the controls for movement and shooting.
+- **Clear Leaderboards**: Reset the leaderboard data.
+
+### Leaderboards
+
+The leaderboard displays your top 10 high scores, including the date and time of each run. Scores are saved locally, so you can always see your best performances on future re-visits
+
+### License
+
+This project is open-source. Feel free to use, modify, and distribute it as you wish.
+
+### Credits
+
+- Developed by [Razvan Faraon]
+- Sounds and images from free online sources. DO NOT USE FOR COMMERCIAL PURPOSES! FOR COMMERCIAL PURPOSES PURCHASE OR DESIGN YOUR OWN ASSETS!
+
+For any questions or support, feel free to reach out via [farirazvan@gmail.com].
+
+Enjoy the game, and see how long you can survive in the Asteroid Dodger!
